@@ -1,6 +1,7 @@
 # GenshinImpact 3rd-party API
 
 > IGS has now been upgraded to the new Genshin 3rd-party API :)
+> 
 > **Development version, do not use in production environment!**
 
 ## Features
@@ -8,6 +9,7 @@
   - Support for more than just picture generators
 
 ## Installation
+**Note:** We recommend that you use python3.9 for deployment
 1. Clone this repo.
 
   ```shell
