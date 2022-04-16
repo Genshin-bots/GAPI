@@ -7,7 +7,7 @@
   - Use a faster FastAPI to replace frameworks such as Quart used in earlier versions
   - Support for more than just picture generators
 
-##Installation
+## Installation
 1. Clone this repo.
 
   ```shell
