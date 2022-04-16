@@ -26,7 +26,7 @@
   # Activate
   .\venv\Scripts\activate.bat # for Windows Users using cmd
   .\venv\Scripts\activate.ps1 # for Windows Users using powershell
-  .\venv\Scripts\activate.sh # for Linux Users
+  source venv/bin/activate # for Linux Users
   ```
 
 4. Installation dependencies.
