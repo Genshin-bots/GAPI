@@ -11,6 +11,7 @@ class Temporary(BaseModel):
 
 
 class Config(BaseModel):
+    ocr: dict
     tmp: Temporary
 
     def __init__(self, conf_fp: str = Path(__file__).parent / 'config.toml'):

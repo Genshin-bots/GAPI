@@ -6,12 +6,14 @@ import re
 import cv2
 import numpy
 from PIL import Image
+from config import Config
 from pydantic import BaseModel
 from paddleocr import PaddleOCR
 from fastapi import APIRouter, Query
 
+conf = Config()
 router = APIRouter(prefix='/scanner')
-ocr = PaddleOCR(use_angle_cls=True, lang="ch")
+ocr = PaddleOCR(lang="ch", **conf.ocr)
 pos_type = '生之花/死之羽/时之计/空之杯/礼之冠'.split('/')
 attrs = '生命值/暴击伤害/暴击率/元素精通/元素充能效率/治疗加成/攻击力/防御力'.split('/') \
              + [f'{i}元素伤害加成' for i in '风草岩冰雷火水']

@@ -1,3 +1,7 @@
+[ocr]
+use_gpu = false
+use_angle_cls = false
+
 [tmp]
 interval = 5  # 扫描临时文件的间隔
 expired_time = 120  # 超时删除时间
