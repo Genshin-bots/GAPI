@@ -13,7 +13,8 @@ from fastapi import APIRouter, Query
 router = APIRouter(prefix='/scanner')
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")
 pos_type = '生之花/死之羽/时之计/空之杯/礼之冠'.split('/')
-main_attrs = '生命值/暴击伤害/暴击率/元素精通/治疗加成/攻击力/防御力'.split('/')
+attrs = '生命值/暴击伤害/暴击率/元素精通/元素充能效率/治疗加成/攻击力/防御力'.split('/') \
+             + [f'{i}元素伤害加成' for i in '风草岩冰雷火水']
 
 
 async def bytes2array(b: bytes) -> numpy.ndarray:
@@ -35,16 +36,20 @@ async def scan(im: Union[str, bytes, Image.Image]):
 
 
 def get_value(v_: str, p2f: bool = False) -> Union[float, int, str, None]:
-    value = v_.replace(',', '').replace('%', '')
-    if value.isdigit():
-        return int(value)
-    try:
-        value_ = float(value)
-    except ValueError:
+    value = v_.replace(',', '').replace('.', '').replace('，', '')
+    if '%' in v_:
+        value_ = value.replace('%', '')
+        try:
+            value_ = round(float(value_) / 10, ndigits=1)
+        except ValueError:
+            return
+        if p2f:
+            return round(value_ / 100, ndigits=3)
+        return f'{value_}%'
+    else:
+        if value.isdigit():
+            return int(value)
         return
-    if p2f:
-        return round(value_ / 100, ndigits=3)
-    return f'{value}%'
 
 
 def nom_float_list(box_pos: list) -> list:
@@ -60,7 +65,7 @@ def sub_attr_matcher(r: str, p2f: bool = False):
     if not reg_:
         return
     return {
-        "attr": reg_.group(1),
+        "attr": get_close_matches(reg_.group(1), attrs)[0],
         "value": get_value(reg_.group(2), p2f=p2f),
         "raw": r
     }
@@ -70,9 +75,9 @@ def term_matcher(r: str) -> Union[tuple, None]:
     pos = get_close_matches(r, pos_type)
     if pos:
         return pos[0], 'pos'
-    attr = get_close_matches(r, main_attrs)
+    attr = get_close_matches(r, attrs)
     if attr:
-        return attr[0], 'pos'
+        return attr[0], 'attr'
     return
 
 
@@ -104,6 +109,7 @@ def result_parser(result: list, convert_percentage=False):
             if not term:
                 pass
             elif term[1] == 'pos':
+                print('trigger position')
                 data_["data"]["position"] = term[0]
                 data_["data"]["level"] = level_matcher(result[pos + 3][1][0])
                 data_["data"]["name"] = result[pos - 1][1][0]
@@ -113,6 +119,7 @@ def result_parser(result: list, convert_percentage=False):
                 })
                 main_attr_founded = True
             else:
+                print('trigger attributions')
                 data_["data"]["position"] = result[pos - 1][1][0]
                 data_["data"]["level"] = level_matcher(result[pos + 2][1][0])
                 data_["data"]["name"] = result[pos - 2][1][0]
