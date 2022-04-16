@@ -1,0 +1,10 @@
+fastapi>=0.75.1
+starlette>=0.17.1
+APScheduler>=3.9.1
+opencv-python>=4.5.5.64
+numpy>=1.22.3
+Pillow>=9.1.0
+pydantic>=1.9.0
+paddleocr>=2.4.0.4
+paddlepaddle>=2.2.2
+toml>=0.10.2

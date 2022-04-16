@@ -1,0 +1,4 @@
+[tmp]
+interval = 5  # 扫描临时文件的间隔
+expired_time = 120  # 超时删除时间
+allow_cleanup = true  # 允许通过url参数cleanup来在一次请求后直接删除图片
